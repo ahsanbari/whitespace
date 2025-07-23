@@ -15,18 +15,18 @@ export default function HeatLayer({ points }: HeatLayerProps) {
   useEffect(() => {
     if (!map || points.length === 0) return;
 
-    // Remove existing heat layer
+
     if (heatLayerRef.current) {
       map.removeLayer(heatLayerRef.current);
       heatLayerRef.current = null;
     }
 
-    // Create new heat layer with optimized settings for large datasets
+    // Create new heat layer with standard heat map colors
     const newHeatLayer = (L as any).heatLayer(points, {
       radius: 20,
       blur: 10,
       maxZoom: 12,
-      max: 10, // Normalize intensity for better visibility
+      max: 10, 
       gradient: {
         0.2: 'blue',
         0.4: 'cyan',

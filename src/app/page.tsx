@@ -13,7 +13,7 @@ export default function Home() {
 
   // Handle flight search from input
   const handleFlightSearch = (flightNumber: string) => {
-    console.log('Searching for flight:', flightNumber);
+
     setSelectedFlightNumber(flightNumber);
   };
 

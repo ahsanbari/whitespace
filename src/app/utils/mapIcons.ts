@@ -26,7 +26,7 @@ const createPlaneIcon = () => {
 
 // Create Google Maps style airport pin markers
 const createAirportIcon = (type: 'origin' | 'destination') => {
-  const color = type === 'origin' ? '#10b981' : '#ef4444'; // green for origin, red for destination
+  const color = type === 'origin' ? 'var(--color-origin)' : 'var(--color-destination)';
   const label = type === 'origin' ? 'DEP' : 'ARR';
   
   return L.divIcon({
@@ -69,40 +69,31 @@ const createAirportIcon = (type: 'origin' | 'destination') => {
   });
 };
 
-// Create current position icon - smaller but still visible
+// Create current position icon - larger and more visible
 const createCurrentPositionIcon = () => {
   return L.divIcon({
     html: `
       <div style="position: relative;">
         <!-- Pulsing ring animation -->
-        <div style="
+        <div class="pulse-ring" style="
           position: absolute;
-          top: -10px;
-          left: -10px;
-          width: 40px;
-          height: 40px;
-          background: rgba(249, 115, 22, 0.3);
+          top: -15px;
+          left: -15px;
+          width: 60px;
+          height: 60px;
+          background: color-mix(in srgb, var(--color-current) 30%, transparent);
           border-radius: 50%;
-          animation: pulse 2s infinite;
         "></div>
         <!-- Main icon -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="8" fill="#f97316" stroke="#fff" stroke-width="2"/>
-          <circle cx="12" cy="12" r="3" fill="#fff"/>
+        <svg width="var(--map-marker-size-xl)" height="var(--map-marker-size-xl)" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="8" fill="var(--color-current)" stroke="var(--color-text-inverse)" stroke-width="2"/>
+          <circle cx="12" cy="12" r="3" fill="var(--color-text-inverse)"/>
         </svg>
-        <!-- CSS for pulse animation -->
-        <style>
-          @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 1; }
-            70% { transform: scale(1.2); opacity: 0.3; }
-            100% { transform: scale(1.4); opacity: 0; }
-          }
-        </style>
       </div>
     `,
     className: 'custom-position-icon',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
   });
 };
 

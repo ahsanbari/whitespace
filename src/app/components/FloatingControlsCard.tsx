@@ -27,8 +27,7 @@ export default function FloatingControlsCard({ onFlightSearch }: {
         return res.json();
       })
       .then((data) => {
-        console.log('Loaded GeoJSON data:', data);
-        console.log('Features count:', data.features?.length || 0);
+
         
         const flightList = data.features
           .filter((feature: any) => feature.properties.number) // Only flights with flight numbers
@@ -40,7 +39,7 @@ export default function FloatingControlsCard({ onFlightSearch }: {
             aircraft_code: feature.properties.aircraft_code || 'N/A'
           }));
           
-        console.log('Flights with numbers:', flightList.length);
+        
         setFlights(flightList);
         setLoading(false);
       })
