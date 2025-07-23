@@ -22,6 +22,7 @@ interface LeafletMapProps {
 
 export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: LeafletMapProps) {
   const [flightData, setFlightData] = useState<FlightGeoJSON | null>(null);
+  const [displayFlights, setDisplayFlights] = useState<AircraftFeature[]>([]);
   const [flightRoute, setFlightRoute] = useState<{
     flightNumber: string;
     origin: string;
@@ -37,24 +38,46 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
     [airportCode: string]: WeatherData;
   }>({});
   const [loadingWeather, setLoadingWeather] = useState<string | null>(null);
+  const [mapLayerControlsOpen, setMapLayerControlsOpen] = useState(false);
 
   useEffect(() => {
     fetch('/data/EasternSeaboardSampled.geojson')
       .then((res) => res.json())
       .then((data: FlightGeoJSON) => {
-
         setFlightData(data);
 
-        // Create limited dataset for markers
+        // Create randomly selected subset for display
         const shuffled = [...data.features].sort(() => 0.5 - Math.random());
-        const limited = shuffled.slice(0, markerLimit);
-        
-
+        const randomSelection = shuffled.slice(0, markerLimit);
+        setDisplayFlights(randomSelection);
       })
       .catch((error) => {
         console.error('Error loading GeoJSON:', error);
       });
-      }, [markerLimit]);
+  }, []);
+
+  // Update random selection when marker limit changes
+  useEffect(() => {
+    if (flightData) {
+      const shuffled = [...flightData.features].sort(() => 0.5 - Math.random());
+      const randomSelection = shuffled.slice(0, markerLimit);
+      setDisplayFlights(randomSelection);
+    }
+  }, [markerLimit, flightData]);
+
+  // Helper function to check if flight has valid route information
+  const hasValidRouteInfo = (flight: AircraftFeature): boolean => {
+    const { origin_airport_iata, destination_airport_iata, number } = flight.properties;
+    
+    if (!origin_airport_iata || !destination_airport_iata || !number) {
+      return false;
+    }
+
+    const originCoords = AIRPORT_COORDS[origin_airport_iata];
+    const destinationCoords = AIRPORT_COORDS[destination_airport_iata];
+    
+    return !!(originCoords && destinationCoords);
+  };
 
   // Handle flight selection from input
   useEffect(() => {
@@ -62,8 +85,10 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
       return;
     }
 
+    // Case-insensitive search for flight codes (e.g., "BA205", "dl675")
+    const searchCode = selectedFlightNumber.trim().toUpperCase();
     const flight = flightData.features.find(
-      f => f.properties.number === selectedFlightNumber
+      f => f.properties.number?.toUpperCase() === searchCode
     );
 
     if (!flight) {
@@ -99,49 +124,21 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
       destinationCoords,
       currentCoords
     });
-  }, [selectedFlightNumber, flightData]);
 
-  const handleFlightSearch = (flightNumber: string) => {
-    if (!flightData) return;
-
-    const flight = flightData.features.find(
-      f => f.properties.number === flightNumber
-    );
-
-    if (!flight) {
-      alert(`Flight ${flightNumber} not found`);
-      return;
-    }
-
-    const { origin_airport_iata, destination_airport_iata, number } = flight.properties;
-    
-    if (!origin_airport_iata || !destination_airport_iata) {
-      alert(`Flight route information not available for ${number}`);
-      return;
-    }
-
-    const originCoords = AIRPORT_COORDS[origin_airport_iata];
-    const destinationCoords = AIRPORT_COORDS[destination_airport_iata];
-
-    if (!originCoords || !destinationCoords) {
-      alert(`Airport coordinates not found for ${origin_airport_iata} or ${destination_airport_iata}`);
-      return;
-    }
-
-    const currentCoords: [number, number] = [
-      flight.geometry.coordinates[1],
-      flight.geometry.coordinates[0]
-    ];
-
-    setFlightRoute({
-      flightNumber: number!,
-      origin: origin_airport_iata,
-      destination: destination_airport_iata,
-      originCoords,
-      destinationCoords,
-      currentCoords
+    // Ensure the searched flight is visible in displayFlights
+    setDisplayFlights(prev => {
+      // Check if the flight is already in the display list (case-insensitive)
+      const flightExists = prev.some(f => f.properties.number?.toUpperCase() === searchCode);
+      if (!flightExists) {
+        // Add the searched flight to the display list, removing one random flight if at limit
+        const newDisplayFlights = [flight, ...prev.slice(0, markerLimit - 1)];
+        return newDisplayFlights;
+      }
+      return prev;
     });
-  };
+  }, [selectedFlightNumber, flightData, markerLimit]);
+
+
 
   // Handle aircraft click to show flight route
   const handleAircraftClick = (flight: any) => {
@@ -232,20 +229,21 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
         )}
 
         {/* Aircraft Markers */}
-        {showMarkers && flightData && flightData.features.slice(0, markerLimit).map((feature, index) => {
+        {showMarkers && displayFlights.map((feature, index) => {
           const { coordinates } = feature.geometry;
           const lat = coordinates[1];
           const lng = coordinates[0];
           const props = feature.properties;
+          const hasRoute = hasValidRouteInfo(feature);
 
           return (
             <Marker
               key={index}
               position={[lat, lng]}
-              icon={createPlaneIcon()}
-              eventHandlers={{
+              icon={createPlaneIcon(hasRoute ? '#1f2937' : '#ef4444')}
+              eventHandlers={hasRoute ? {
                 click: () => handleAircraftClick(feature)
-              }}
+              } : {}}
             >
               <Popup>
                 <div style={{ fontSize: '12px', color: '#1f2937' }}>
@@ -254,10 +252,27 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
                   Aircraft: {props.aircraft_code || 'N/A'}<br />
                   Altitude: {props.altitude?.toLocaleString() || 'N/A'} ft<br />
                   Speed: {props.ground_speed || 'N/A'} kts<br />
-                  {props.origin_airport_iata && props.destination_airport_iata && (
+                  {hasRoute ? (
                     <>Route: {props.origin_airport_iata} → {props.destination_airport_iata}<br /></>
+                  ) : (
+                    <span style={{ color: '#ef4444', fontStyle: 'italic' }}>
+                      Route information unavailable<br />
+                    </span>
                   )}
                   {props.on_ground ? 'On Ground' : 'In Flight'}
+                  {!hasRoute && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      padding: '4px', 
+                      background: '#fef2f2', 
+                      border: '1px solid #fecaca', 
+                      borderRadius: '4px', 
+                      color: '#991b1b',
+                      fontSize: '10px'
+                    }}>
+                      ⚠️ Click disabled - Missing airport data
+                    </div>
+                  )}
                 </div>
               </Popup>
             </Marker>
@@ -388,12 +403,14 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
         onHeatmapToggle={setShowHeatmap}
         onMarkersToggle={setShowMarkers}
         onMarkerLimitChange={setMarkerLimit}
+        onOpenChange={setMapLayerControlsOpen}
       />
 
       {flightRoute && (
         <FlightRouteLegend
           flightRoute={flightRoute}
           showMarkers={showMarkers}
+          mapLayerControlsOpen={mapLayerControlsOpen}
           onClearRoute={() => setFlightRoute(null)}
         />
       )}

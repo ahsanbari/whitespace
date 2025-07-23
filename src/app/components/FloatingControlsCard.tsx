@@ -18,6 +18,23 @@ export default function FloatingControlsCard({ onFlightSearch }: {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const HamburgerIcon = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  );
+
   useEffect(() => {
     // Load flight data
     setLoading(true);
@@ -30,12 +47,16 @@ export default function FloatingControlsCard({ onFlightSearch }: {
 
         
         const flightList = data.features
-          .filter((feature: any) => feature.properties.number) // Only flights with flight numbers
+          .filter((feature: any) => 
+            feature.properties.number && 
+            feature.properties.origin_airport_iata && 
+            feature.properties.destination_airport_iata
+          ) // Only flights with complete route information
           .map((feature: any) => ({
             number: feature.properties.number,
             callsign: feature.properties.callsign || 'Unknown',
-            origin: feature.properties.origin_airport_iata || 'Unknown',
-            destination: feature.properties.destination_airport_iata || 'Unknown',
+            origin: feature.properties.origin_airport_iata,
+            destination: feature.properties.destination_airport_iata,
             aircraft_code: feature.properties.aircraft_code || 'N/A'
           }));
           
@@ -59,11 +80,11 @@ export default function FloatingControlsCard({ onFlightSearch }: {
   if (!visible) {
     return (
       <button
-        className="fixed bottom-4 right-4 z-50 bg-white shadow-lg rounded-full p-2 border border-gray-300 hover:bg-gray-50 transition-colors"
-        aria-label="Show controls"
+        className="fixed bottom-4 right-4 z-50 bg-white shadow-lg rounded-full p-3 border border-gray-300 hover:bg-gray-50 transition-colors text-gray-800"
+        aria-label="Show flight tracker controls"
         onClick={() => setVisible(true)}
       >
-        <span className="font-bold text-gray-800">+</span>
+        <HamburgerIcon />
       </button>
     );
   }
@@ -85,14 +106,14 @@ export default function FloatingControlsCard({ onFlightSearch }: {
         {/* Flight Number Search */}
         <div>
           <label htmlFor="flight-input" className="text-sm font-medium text-gray-700 block mb-2">
-            Enter Flight Number
+            Enter Flight Code
           </label>
           <div className="flex gap-2">
             <input
               id="flight-input"
               type="text"
               className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
-              placeholder="e.g. DL675, WN581, AA398"
+              placeholder="e.g. BA205, DL675, AA1234"
               value={flightNumber}
               onChange={e => setFlightNumber(e.target.value)}
               onKeyPress={e => e.key === 'Enter' && handleFlightSearch()}
@@ -112,7 +133,7 @@ export default function FloatingControlsCard({ onFlightSearch }: {
             How to Use
           </label>
           <div className="text-xs text-gray-600 space-y-1">
-            <p>• Enter flight number above OR click any plane on map</p>
+            <p>• Enter flight code above OR click any plane on map</p>
             <p>• See departure and arrival airports</p>
             <p>• Toggle heatmap to view aircraft density</p>
           </div>

@@ -7,20 +7,31 @@ interface FlightRouteLegendProps {
     destination: string;
   };
   showMarkers: boolean;
+  mapLayerControlsOpen: boolean;
   onClearRoute: () => void;
 }
 
 export default function FlightRouteLegend({
   flightRoute,
   showMarkers,
+  mapLayerControlsOpen,
   onClearRoute
 }: FlightRouteLegendProps) {
+  // Calculate dynamic top margin based on map layer controls state
+  const getTopMargin = () => {
+    if (mapLayerControlsOpen) {
+      return showMarkers ? '220px' : '180px';
+    } else {
+      return '60px';
+    }
+  };
+
   return (
     <div 
       className="absolute top-4 right-4 map-control" 
       style={{ 
         zIndex: 'var(--z-index-modal)',
-        marginTop: showMarkers ? '200px' : '160px',
+        marginTop: getTopMargin(),
         maxWidth: '18rem'
       }}
     >

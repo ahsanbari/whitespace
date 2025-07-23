@@ -153,6 +153,19 @@
   color: var(--color-text-secondary);
 }
 
+.map-control__settings-btn {
+  transition: all 0.2s ease;
+}
+
+.map-control__settings-btn:hover {
+  background-color: var(--color-neutral-100) !important;
+  color: var(--color-neutral-800) !important;
+}
+
+.map-control__settings-btn:active {
+  background-color: var(--color-neutral-200) !important;
+}
+
 /* Button Styles */
 .btn-primary {
   background-color: var(--color-primary-500);
