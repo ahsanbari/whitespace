@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FlightGeoJSON, AircraftFeature } from '../types/flight';
 import { createPlaneIcon, createAirportIcon, createCurrentPositionIcon } from '../utils/mapIcons';
+import { getFlightPath, calculateFlightDistance } from '../utils/flightPaths';
 import { AIRPORT_COORDS, AIRPORT_NAMES, AIRPORTS } from '../config/airports';
 import { fetchAirportWeather, WeatherData } from '../services/weatherService';
 import WeatherPopup from './WeatherPopup';
@@ -284,7 +285,7 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
           <>
             {/* Flight path polyline */}
             <Polyline
-              positions={[flightRoute.originCoords, flightRoute.destinationCoords]}
+              positions={getFlightPath(flightRoute.originCoords, flightRoute.destinationCoords)}
               color="#3b82f6"
               weight={2}
               opacity={0.8}
