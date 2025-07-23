@@ -1,4 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) flight tracking application that visualizes aircraft data with interactive maps using Leaflet.
+
+## Installation
+
+First, clone the repository and install all dependencies:
+
+```bash
+# Install all project dependencies
+npm install
+
+# Install TypeScript definitions for Leaflet
+npm install --save-dev @types/leaflet
+```
+
+## Environment Setup
+
+1. Copy the environment template file:
+   ```bash
+   cp env.template .env.local
+   ```
+
+2. Edit `.env.local` and add your OpenWeatherMap API key:
+   - Get a free API key at: https://openweathermap.org/api
+   - Replace `your_openweathermap_api_key_here` with your actual API key
 
 ## Getting Started
 
