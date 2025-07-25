@@ -18,10 +18,20 @@ export interface WeatherResponse {
   error?: string;
 }
 
+// Convert wind direction to compass direction with full names
+export const getWindDirection = (degrees: number): string => {
+  const directions = [
+    'North', 'North-Northeast', 'Northeast', 'East-Northeast', 
+    'East', 'East-Southeast', 'Southeast', 'South-Southeast',
+    'South', 'South-Southwest', 'Southwest', 'West-Southwest', 
+    'West', 'West-Northwest', 'Northwest', 'North-Northwest'
+  ];
+  const index = Math.round(degrees / 22.5) % 16;
+  return directions[index];
+};
 
-
-// Convert wind direction to compass direction
-const getWindDirection = (degrees: number): string => {
+// Get abbreviated wind direction for compact displays
+export const getWindDirectionShort = (degrees: number): string => {
   const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
@@ -72,6 +82,4 @@ export const fetchAirportWeather = async (
       error: error instanceof Error ? error.message : 'Failed to fetch weather data'
     };
   }
-};
-
-export { getWindDirection }; 
+}; 

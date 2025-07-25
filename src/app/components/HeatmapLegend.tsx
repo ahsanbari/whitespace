@@ -4,14 +4,11 @@ interface HeatmapLegendProps {
   showHeatmap: boolean;
 }
 
-export default function HeatmapLegend({ showHeatmap }: HeatmapLegendProps) {
+const HeatmapLegend = React.memo(({ showHeatmap }: HeatmapLegendProps) => {
   if (!showHeatmap) return null;
 
   return (
-    <div 
-      className="absolute bottom-4 left-4 map-control" 
-      style={{ zIndex: 'var(--z-index-overlay)' }}
-    >
+    <div className="map-control max-w-max">
       <h3 className="map-control__title">Aircraft Density</h3>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
@@ -69,4 +66,8 @@ export default function HeatmapLegend({ showHeatmap }: HeatmapLegendProps) {
       </div>
     </div>
   );
-} 
+});
+
+HeatmapLegend.displayName = 'HeatmapLegend';
+
+export default HeatmapLegend; 

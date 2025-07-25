@@ -10,13 +10,18 @@ export const fixLeafletDefaultIcons = () => {
   });
 };
 
-// Create a plane icon with customizable color
-const createPlaneIcon = (color: string = '#1f2937') => {
+// Create a plane icon with customizable color and rotation
+const createPlaneIcon = (color: string = '#1f2937', rotation: number = 0) => {
   return L.divIcon({
     html: `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="${color}" stroke="#00000050" stroke-width="0.5"/>
-      </svg>
+      <div style="transform: rotate(${rotation}deg); width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" 
+                fill="${color}" 
+                stroke="#fff" 
+                stroke-width="0.5"/>
+        </svg>
+      </div>
     `,
     className: 'custom-plane-icon',
     iconSize: [16, 16],
