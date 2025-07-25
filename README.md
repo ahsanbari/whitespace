@@ -57,3 +57,43 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## End-to-End Testing (Playwright)
+
+This project uses [Playwright](https://playwright.dev/) for E2E browser testing.
+
+### Setup
+
+If you haven't already, install Playwright and its browsers:
+
+```bash
+npx playwright install
+```
+
+### Running Tests
+
+To run all E2E tests:
+
+```bash
+npx playwright test
+```
+
+To run a specific test file:
+
+```bash
+npx playwright test tests/e2e/flight-search.spec.ts
+```
+
+### Viewing Test Reports
+
+After running tests, view the HTML report:
+
+```bash
+npx playwright show-report
+```
+
+### Notes
+- By default, only Desktop Chrome tests are run (see `playwright.config.ts`).
+- The Next.js dev server will be started automatically if not already running.
+- If you see timeouts, ensure your local server and data are loading correctly.
+- For troubleshooting, check the `test-results/` and `playwright-report/` folders for screenshots and videos of failures.
