@@ -48,5 +48,7 @@ export default function HeatLayer({ points }: HeatLayerProps) {
     };
   }, [map, points]);
 
-  return null;
+  return (
+    <span data-testid="heatmap-layer" style={{ display: 'none' }} />
+  );
 } 

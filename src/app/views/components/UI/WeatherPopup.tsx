@@ -81,7 +81,7 @@ const WeatherPopup: React.FC<WeatherPopupProps> = ({
   const humidityCondition = getHumidityCondition(weather.humidity);
 
   return (
-    <div style={{ 
+    <div data-testid="weather-popup" style={{ 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       minWidth: '301px',
       maxWidth: '360px',

@@ -192,6 +192,7 @@ const MapLayerControls = React.memo(({
               checked={showHeatmap}
               onChange={(e) => onHeatmapToggle(e.target.checked)}
               style={{ marginRight: 'var(--space-sm)' }}
+              data-testid="toggle-heatmap"
             />
             Show Heatmap
           </label>
@@ -202,6 +203,7 @@ const MapLayerControls = React.memo(({
               checked={showMarkers}
               onChange={(e) => onMarkersToggle(e.target.checked)}
               style={{ marginRight: 'var(--space-sm)' }}
+              data-testid="toggle-markers"
             />
             Show Aircraft ({markerLimit})
           </label>
@@ -213,6 +215,7 @@ const MapLayerControls = React.memo(({
                 checked={enableClustering}
                 onChange={(e) => onClusteringToggle(e.target.checked)}
                 style={{ marginRight: 'var(--space-sm)' }}
+                data-testid="toggle-clustering"
               />
               Group Nearby Aircraft
             </label>
@@ -238,6 +241,7 @@ const MapLayerControls = React.memo(({
                 onChange={(e) => onShowAllFlightsToggle?.(e.target.checked)}
                 disabled={!webglSupported}
                 style={{ marginRight: 'var(--space-sm)' }}
+                data-testid="toggle-webgl"
               />
               ⚡ WebGL High-Performance Mode
               {!webglSupported && (
@@ -281,6 +285,7 @@ const MapLayerControls = React.memo(({
                   padding: 'var(--space-xs) var(--space-sm)',
                   width: '100%'
                 }}
+                data-testid="marker-limit-input"
               >
                 <option value={100}>100</option>
                 <option value={500}>500</option>

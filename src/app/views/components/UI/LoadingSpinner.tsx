@@ -2,6 +2,7 @@ import React from 'react';
 
 const LoadingSpinner = React.memo(() => (
   <div 
+    data-testid="loading-spinner"
     className="absolute inset-0 flex items-center justify-center" 
     style={{ 
       backgroundColor: 'rgba(0, 0, 0, 0.3)', 

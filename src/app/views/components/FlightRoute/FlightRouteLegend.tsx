@@ -51,7 +51,7 @@ const FlightRouteLegend = React.memo(({
   }
 
   return (
-    <div className="map-control" style={{ maxWidth: '18rem', minWidth: '16rem' }}>
+    <div className="map-control" data-testid="flight-route-legend" style={{ maxWidth: '18rem', minWidth: '16rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-sm)' }}>
         <h3 className="map-control__title" style={{ marginBottom: 0 }}>
           Flight Route: {flightRoute.flightNumber}

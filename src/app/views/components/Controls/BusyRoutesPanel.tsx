@@ -1,6 +1,30 @@
 import React, { useState } from 'react';
 import { RouteInfo } from '../../../infrastructure/utils';
 
+const CloseIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <path 
+      d="M18 6L6 18M6 6l12 12" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const ChartIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path 
+      d="M3 3v18h18M8 17V9m4 8V5m4 12v-4" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 interface BusyRoutesPanelProps {
   routes: RouteInfo[];
   totalFlights: number;
@@ -48,7 +72,7 @@ const BusyRoutesPanel = React.memo(({
   }
 
   return (
-    <div className="map-control" style={{ minWidth: '300px', maxWidth: '350px' }}>
+    <div data-testid="busy-routes-panel" className="map-control" style={{ minWidth: '300px', maxWidth: '350px' }}>
       <div className="flex items-center justify-between" style={{ marginBottom: 'var(--space-md)' }}>
         <h3 className="map-control__title" style={{ marginBottom: 0 }}>Flight Statistics</h3>
         <button
@@ -131,41 +155,25 @@ const BusyRoutesPanel = React.memo(({
       <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
         {routes.slice(0, 8).map((route, index) => (
           <div
+            data-testid="busy-route-row"
             key={`${route.origin}-${route.destination}`}
             onClick={() => onRouteClick(route.origin, route.destination)}
             style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               padding: 'var(--space-sm)',
-              marginBottom: 'var(--space-xs)',
-              background: 'rgba(255, 255, 255, 0.5)',
-              borderRadius: 'var(--radius-sm)',
+              borderBottom: '1px solid var(--map-control-border)',
               cursor: 'pointer',
-              border: '1px solid rgba(0, 0, 0, 0.1)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-              e.currentTarget.style.borderColor = 'var(--color-primary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)';
-              e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+              background: index % 2 === 0 ? 'var(--map-control-bg)' : 'var(--map-control-bg-alt)'
             }}
           >
-            <div className="flex justify-between items-center">
-              <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)' }}>
-                {route.origin} → {route.destination}
-              </span>
-              <span style={{ 
-                fontSize: 'var(--font-size-xs)', 
-                background: 'var(--color-primary)',
-                color: 'blue',
-                padding: '2px 6px',
-                borderRadius: 'var(--radius-xs)',
-                fontWeight: 'var(--font-weight-medium)'
-              }}>
-                {route.count}
-              </span>
+            <div>
+              <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-medium)' }}>{route.origin}</span>
+              <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}> to </span>
+              <span style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-medium)' }}>{route.destination}</span>
             </div>
+            <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-medium)' }}>{route.count}</div>
           </div>
         ))}
       </div>
@@ -173,32 +181,4 @@ const BusyRoutesPanel = React.memo(({
   );
 });
 
-BusyRoutesPanel.displayName = 'BusyRoutesPanel';
-
 export default BusyRoutesPanel;
-
-// Chart Icon Component for the reopen button
-const ChartIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path 
-      d="M3 3v18h18M8 17V9m4 8V5m4 12v-4" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-// Close Icon Component
-const CloseIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path 
-      d="M18 6L6 18M6 6l12 12" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    />
-  </svg>
-); 

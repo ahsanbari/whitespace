@@ -40,7 +40,7 @@ const FlightMarkersLayer = React.memo(({
           }
           
           return L.divIcon({
-            html: `<div style="
+            html: `<div data-testid="cluster-marker" style="
               background: linear-gradient(135deg, #3b82f6, #1d4ed8);
               color: white;
               width: ${size === 'small' ? '30px' : size === 'medium' ? '40px' : '50px'};
@@ -65,6 +65,7 @@ const FlightMarkersLayer = React.memo(({
             feature={feature}
             hasRoute={hasValidRouteInfo(feature)}
             onAircraftClick={onAircraftClick}
+            data-testid="flight-marker"
           />
         ))}
       </MarkerClusterGroup>

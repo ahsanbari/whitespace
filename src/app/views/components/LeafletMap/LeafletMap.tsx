@@ -154,7 +154,7 @@ export default function LeafletMap({ selectedFlightNumber, onFlightSelect }: Lea
   }, []);
 
   return (
-    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+    <div data-testid="map-container" style={{ height: '100vh', width: '100%', position: 'relative' }}>
       {/* Loading Spinner Overlay */}
       {isLoading && <LoadingSpinner />}
       

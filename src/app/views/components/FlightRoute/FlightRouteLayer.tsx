@@ -35,6 +35,7 @@ const FlightRouteLayer = React.memo(({
     <>
       {/* Flight Path */}
       <Polyline
+        data-testid="flight-route-polyline"
         positions={flightPath}
         color="var(--color-route)"
         weight={3}
@@ -53,6 +54,7 @@ const FlightRouteLayer = React.memo(({
         <Popup>
           {weatherData[flightRoute.origin] ? (
             <WeatherPopup
+              data-testid="weather-popup"
               airportCode={flightRoute.origin}
               airportName={AIRPORT_NAMES[flightRoute.origin] || 'Airport'}
               weather={weatherData[flightRoute.origin]}
