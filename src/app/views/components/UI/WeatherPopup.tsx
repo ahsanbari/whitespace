@@ -1,5 +1,5 @@
 import React from 'react';
-import { WeatherData, getWindDirection, getWindDirectionShort } from '../services/weatherService';
+import { WeatherData, getWindDirection, getWindDirectionShort } from '../../../services/weatherService';
 
 interface WeatherPopupProps {
   airportCode: string;

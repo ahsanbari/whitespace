@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AIRPORT_NAMES } from '../config/airports';
+import { AIRPORT_NAMES } from '../../../infrastructure/config';
 
 interface FlightRouteLegendProps {
   flightRoute: {

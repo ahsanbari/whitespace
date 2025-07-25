@@ -1,9 +1,9 @@
 "use client";
 import dynamic from 'next/dynamic';
-import FloatingControlsCard from './components/FloatingControlsCard';
+import { FloatingControlsCard } from './views/components/Controls';
 import { useState } from 'react';
 
-const LeafletMap = dynamic(() => import('./components/LeafletMap'), { 
+const LeafletMap = dynamic(() => import('./views/components/LeafletMap/LeafletMap'), { 
   ssr: false,
   loading: () => <div className="w-full h-screen bg-gray-100 flex items-center justify-center">Loading map...</div>
 });

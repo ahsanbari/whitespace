@@ -6,11 +6,14 @@ interface MapLayerControlsProps {
   markerLimit: number;
   enableClustering: boolean;
   enableViewportCulling?: boolean;
+  showAllFlights?: boolean; // Keep for compatibility but rename functionality
+  webglSupported?: boolean;
   onHeatmapToggle: (show: boolean) => void;
   onMarkersToggle: (show: boolean) => void;
   onMarkerLimitChange: (limit: number) => void;
   onClusteringToggle: (enable: boolean) => void;
   onViewportCullingToggle?: (enable: boolean) => void;
+  onShowAllFlightsToggle?: (enable: boolean) => void; // Keep for compatibility
   onOpenChange?: (isOpen: boolean) => void;
   // New filter props
   onFilterChange?: (filters: FilterOptions) => void;
@@ -30,11 +33,14 @@ const MapLayerControls = React.memo(({
   markerLimit,
   enableClustering,
   enableViewportCulling = true,
+  showAllFlights = false,
+  webglSupported = false,
   onHeatmapToggle,
   onMarkersToggle,
   onMarkerLimitChange,
   onClusteringToggle,
   onViewportCullingToggle,
+  onShowAllFlightsToggle,
   onOpenChange,
   onFilterChange
 }: MapLayerControlsProps) => {
@@ -45,7 +51,7 @@ const MapLayerControls = React.memo(({
     showInAir: true,
     showDomestic: true,
     showInternational: true,
-    showIncomplete: true
+    showIncomplete: false
   });
 
   useEffect(() => {
@@ -222,6 +228,39 @@ const MapLayerControls = React.memo(({
               />
               Smart Viewport Rendering
             </label>
+          )}
+          
+          {showMarkers && (
+            <label className="flex items-center map-control__text">
+              <input
+                type="checkbox"
+                checked={showAllFlights}
+                onChange={(e) => onShowAllFlightsToggle?.(e.target.checked)}
+                disabled={!webglSupported}
+                style={{ marginRight: 'var(--space-sm)' }}
+              />
+              ⚡ WebGL High-Performance Mode
+              {!webglSupported && (
+                <span style={{ 
+                  color: '#ef4444', 
+                  fontSize: '10px', 
+                  marginLeft: '8px' 
+                }}>
+                  (Not supported)
+                </span>
+              )}
+            </label>
+          )}
+          
+          {showMarkers && showAllFlights && webglSupported && (
+            <div style={{ 
+              fontSize: '10px', 
+              color: '#666', 
+              marginLeft: '20px',
+              fontStyle: 'italic' 
+            }}>
+              Renders 10,000+ flights with spatial partitioning
+            </div>
           )}
           
           {showMarkers && (

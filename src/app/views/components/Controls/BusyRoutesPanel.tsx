@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RouteInfo } from '../utils/flightAnalysis';
+import { RouteInfo } from '../../../infrastructure/utils';
 
 interface BusyRoutesPanelProps {
   routes: RouteInfo[];
